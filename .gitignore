@@ -1,0 +1,13 @@
+# .gitignore
+
+# Node.js
+server/node_modules/
+server/.env
+
+# React
+client/node_modules/
+client/.env
+
+# General
+.DS_Store
+*.log
