@@ -43,18 +43,33 @@ function PaymentForm() {
       setErrors(errs);
       return;
     }
+    console.log('Submitting:', form);
+
     setLoading(true);
     try {
-      await axios.post('/api/create-payment', {
+      const paymentData = {
         fullName: form.fullName,
         email: form.email,
         mobile: form.mobile,
-        amount: form.amount,
+        amount: Number(form.amount),
+      };
+      
+      console.log('Sending payment data:', paymentData);
+      
+      // Use full URL if backend is on different port
+      const response = await axios.post('http://localhost:5000/api/create-payment', paymentData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
+      
+      console.log('Payment response:', response.data);
       setSuccess('Payment request created successfully!');
       setForm(initialState);
     } catch (err) {
-      setError('Failed to create payment. Please try again.');
+      console.error('Payment error:', err);
+      console.error('Error response:', err.response?.data);
+      setError(err.response?.data?.error || 'Failed to create payment. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -89,7 +104,7 @@ function PaymentForm() {
       <div>
         <label htmlFor="mobile">Mobile Number</label>
         <input
-          type="number"
+          type="tel"
           id="mobile"
           name="mobile"
           value={form.mobile}
@@ -121,4 +136,4 @@ function PaymentForm() {
   );
 }
 
-export default PaymentForm; 
+export default PaymentForm;
